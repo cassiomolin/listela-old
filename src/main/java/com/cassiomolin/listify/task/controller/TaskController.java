@@ -17,7 +17,8 @@ import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
 
-@RestController("tasks")
+@RestController
+@RequestMapping("/tasks")
 public class TaskController {
 
     @Autowired
