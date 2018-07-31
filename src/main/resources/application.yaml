@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+auth:
+  jwt:
+    secret:    secret
+    issuer:    http://example.org
+    audience:  http://example.org
+    clockSkew: 10    # seconds
+    validFor:  86400 # seconds
