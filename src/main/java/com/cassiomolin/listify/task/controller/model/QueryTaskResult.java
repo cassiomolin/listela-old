@@ -1,16 +1,20 @@
-package com.cassiomolin.vanilla.task.domain;
+package com.cassiomolin.listify.task.controller.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.time.ZonedDateTime;
 
+/**
+ * API model for returning a task query result.
+ *
+ * @author cassiomolin
+ */
 @Data
 @NoArgsConstructor
-public class Task {
+public class QueryTaskResult {
 
-    @Id
     private String id;
 
     private String description;

@@ -1,4 +1,4 @@
-package com.cassiomolin.vanilla.task.domain;
+package com.cassiomolin.listify.task.domain;
 
 import lombok.Data;
 

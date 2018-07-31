@@ -1,11 +1,11 @@
-package com.cassiomolin.vanilla.task.controller;
+package com.cassiomolin.listify.task.controller;
 
-import com.cassiomolin.vanilla.task.controller.mapper.TaskMapper;
-import com.cassiomolin.vanilla.task.controller.model.CreateTaskDetails;
-import com.cassiomolin.vanilla.task.controller.model.QueryTaskResult;
-import com.cassiomolin.vanilla.task.domain.Task;
-import com.cassiomolin.vanilla.task.domain.TaskFilter;
-import com.cassiomolin.vanilla.task.service.TaskService;
+import com.cassiomolin.listify.task.controller.mapper.TaskMapper;
+import com.cassiomolin.listify.task.controller.model.CreateTaskDetails;
+import com.cassiomolin.listify.task.controller.model.QueryTaskResult;
+import com.cassiomolin.listify.task.domain.Task;
+import com.cassiomolin.listify.task.domain.TaskFilter;
+import com.cassiomolin.listify.task.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

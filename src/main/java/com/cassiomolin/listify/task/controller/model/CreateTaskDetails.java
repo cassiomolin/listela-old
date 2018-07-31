@@ -1,4 +1,4 @@
-package com.cassiomolin.vanilla.task.controller.model;
+package com.cassiomolin.listify.task.controller.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

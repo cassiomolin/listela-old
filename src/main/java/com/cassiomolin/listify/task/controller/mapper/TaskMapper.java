@@ -1,9 +1,9 @@
-package com.cassiomolin.vanilla.task.controller.mapper;
+package com.cassiomolin.listify.task.controller.mapper;
 
-import com.cassiomolin.vanilla.task.controller.model.CreateTaskDetails;
-import com.cassiomolin.vanilla.task.controller.model.QueryTaskResult;
-import com.cassiomolin.vanilla.task.controller.model.UpdateTaskDetails;
-import com.cassiomolin.vanilla.task.domain.Task;
+import com.cassiomolin.listify.task.controller.model.CreateTaskDetails;
+import com.cassiomolin.listify.task.controller.model.QueryTaskResult;
+import com.cassiomolin.listify.task.controller.model.UpdateTaskDetails;
+import com.cassiomolin.listify.task.domain.Task;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
