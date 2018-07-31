@@ -15,6 +15,7 @@
     </parent>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>10</java.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
         <jjwt.version>0.9.1</jjwt.version>
