@@ -2,7 +2,7 @@ package com.cassiomolin.listify.task.controller;
 
 import com.cassiomolin.listify.task.controller.mapper.TaskMapper;
 import com.cassiomolin.listify.task.controller.model.CreateTaskDetails;
-import com.cassiomolin.listify.task.controller.model.QueryTaskResult;
+import com.cassiomolin.listify.task.controller.model.QueryTaskDetails;
 import com.cassiomolin.listify.task.domain.Task;
 import com.cassiomolin.listify.task.domain.TaskFilter;
 import com.cassiomolin.listify.task.service.TaskService;
@@ -41,16 +41,16 @@ public class TaskController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<QueryTaskResult>> findTasks(@RequestParam(name = "description", required = false) String description,
-                                                           @RequestParam(name = "completed", required = false) Boolean completed) {
+    public ResponseEntity<List<QueryTaskDetails>> findTasks(@RequestParam(name = "description", required = false) String description,
+                                                            @RequestParam(name = "completed", required = false) Boolean completed) {
 
         TaskFilter filter = new TaskFilter();
         filter.setDescription(description);
         filter.setCompleted(completed);
 
         List<Task> tasks = taskService.findTasks(filter);
-        List<QueryTaskResult> queryTaskResults = taskMapper.toQueryTaskResults(tasks);
+        List<QueryTaskDetails> queryTaskDetails = taskMapper.toQueryTaskResults(tasks);
 
-        return ResponseEntity.ok(queryTaskResults);
+        return ResponseEntity.ok(queryTaskDetails);
     }
 }

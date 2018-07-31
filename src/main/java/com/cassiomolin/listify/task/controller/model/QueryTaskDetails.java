@@ -13,7 +13,7 @@ import java.time.ZonedDateTime;
  */
 @Data
 @NoArgsConstructor
-public class QueryTaskResult {
+public class QueryTaskDetails {
 
     private String id;
 

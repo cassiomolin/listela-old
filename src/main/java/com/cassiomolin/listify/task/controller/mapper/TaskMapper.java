@@ -1,7 +1,7 @@
 package com.cassiomolin.listify.task.controller.mapper;
 
 import com.cassiomolin.listify.task.controller.model.CreateTaskDetails;
-import com.cassiomolin.listify.task.controller.model.QueryTaskResult;
+import com.cassiomolin.listify.task.controller.model.QueryTaskDetails;
 import com.cassiomolin.listify.task.controller.model.UpdateTaskDetails;
 import com.cassiomolin.listify.task.domain.Task;
 import org.mapstruct.Mapper;
@@ -20,9 +20,9 @@ public interface TaskMapper {
 
     Task  toTask(CreateTaskDetails createTaskDetails);
 
-    QueryTaskResult toQueryTaskResult(Task task);
+    QueryTaskDetails toQueryTaskResult(Task task);
 
-    List<QueryTaskResult> toQueryTaskResults(List<Task> tasks);
+    List<QueryTaskDetails> toQueryTaskResults(List<Task> tasks);
 
     void updateTask(UpdateTaskDetails updateTaskDetails, @MappingTarget Task task);
 }

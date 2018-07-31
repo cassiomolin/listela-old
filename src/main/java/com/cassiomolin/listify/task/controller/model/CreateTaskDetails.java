@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * API model that holds details for creating a task.
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class CreateTaskDetails {
 
+    @NotNull
     @NotBlank
     private String description;
 }
