@@ -1,16 +1,14 @@
-package com.cassiomolin.listela.task.domain;
+package com.cassiomolin.listela.checklist.controller.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.time.ZonedDateTime;
 
 @Data
 @NoArgsConstructor
-public class Task {
+public class QueryChecklistItemDetails {
 
-    @Id
     private String id;
 
     private String description;

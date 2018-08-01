@@ -23,5 +23,29 @@ public class User {
 
     private boolean active;
 
+    private byte[] picture;
+
+    private EmailVerificationToken emailVerificationToken;
+
+    private PasswordResetToken passwordResetToken;
+
     private OffsetDateTime createdDate;
+
+    @Data
+    @NoArgsConstructor
+    static class EmailVerificationToken {
+
+        private String token;
+
+        private OffsetDateTime createdDate;
+    }
+
+    @Data
+    @NoArgsConstructor
+    static class PasswordResetToken {
+
+        private String token;
+
+        private OffsetDateTime createdDate;
+    }
 }

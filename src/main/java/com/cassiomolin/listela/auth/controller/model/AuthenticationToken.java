@@ -1,4 +1,4 @@
-package com.cassiomolin.listela.auth.model;
+package com.cassiomolin.listela.auth.controller.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.cassiomolin.listela.auth.controller;
 
-import com.cassiomolin.listela.auth.model.AuthenticationToken;
-import com.cassiomolin.listela.auth.model.Credentials;
+import com.cassiomolin.listela.auth.controller.model.AuthenticationToken;
+import com.cassiomolin.listela.auth.controller.model.CredentialDetails;
 import com.cassiomolin.listela.auth.service.AuthenticationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,12 +30,12 @@ public class AuthController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
                  produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthenticationToken> issueToken(@Valid @NotNull @RequestBody Credentials credentials) {
+    public ResponseEntity<AuthenticationToken> issueToken(@Valid @NotNull @RequestBody CredentialDetails credentialDetails) {
 
-        Authentication authenticationRequest = new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword());
+        Authentication authenticationRequest = new UsernamePasswordAuthenticationToken(credentialDetails.getEmail(), credentialDetails.getPassword());
         Authentication authenticationResult = authenticationManager.authenticate(authenticationRequest);
-        SecurityContextHolder.getContext().setAuthentication(authenticationResult);
 
+        SecurityContextHolder.getContext().setAuthentication(authenticationResult);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         String token = authenticationTokenService.issueToken(username);

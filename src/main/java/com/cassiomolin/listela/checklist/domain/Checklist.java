@@ -1,6 +1,5 @@
 package com.cassiomolin.listela.checklist.domain;
 
-import com.cassiomolin.listela.task.domain.Task;
 import com.cassiomolin.listela.user.domain.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +21,7 @@ public class Checklist {
     @DBRef
     private User owner;
 
-    private List<Task> items;
+    private List<ChecklistItem> items;
 
     private ZonedDateTime createdDate;
 }

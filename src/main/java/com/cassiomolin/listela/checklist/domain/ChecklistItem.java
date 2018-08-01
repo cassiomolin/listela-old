@@ -1,22 +1,19 @@
-package com.cassiomolin.listela.task.controller.model;
+package com.cassiomolin.listela.checklist.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 import java.time.ZonedDateTime;
 
-/**
- * API model for returning a task query result.
- *
- * @author cassiomolin
- */
 @Data
 @NoArgsConstructor
-public class QueryTaskDetails {
+public class ChecklistItem {
 
+    @Id
     private String id;
 
-    private String description;
+    private String title;
 
     private Boolean completed;
 

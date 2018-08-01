@@ -1,4 +1,4 @@
-package com.cassiomolin.listela.task.controller.model;
+package com.cassiomolin.listela.checklist.controller.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 @NoArgsConstructor
-public class UpdateTaskDetails {
+public class UpdateChecklistItemDetails {
 
     @NotBlank
     private String description;
