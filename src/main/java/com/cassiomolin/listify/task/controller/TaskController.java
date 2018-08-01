@@ -33,10 +33,7 @@ public class TaskController {
         Task task = taskMapper.toTask(createTaskDetails);
         task = taskService.createTask(task);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(task.getId()).toUri();
-
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(task.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 
