@@ -1,6 +1,5 @@
 package com.cassiomolin.listify.task.controller.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

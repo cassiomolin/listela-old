@@ -1,13 +1,10 @@
 package com.cassiomolin.listify.user.controller;
 
-import com.cassiomolin.listify.task.controller.model.CreateTaskDetails;
-import com.cassiomolin.listify.task.domain.Task;
 import com.cassiomolin.listify.user.controller.mapper.UserMapper;
 import com.cassiomolin.listify.user.controller.model.CreateUserDetails;
 import com.cassiomolin.listify.user.controller.model.QueryUserDetails;
 import com.cassiomolin.listify.user.domain.User;
 import com.cassiomolin.listify.user.service.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

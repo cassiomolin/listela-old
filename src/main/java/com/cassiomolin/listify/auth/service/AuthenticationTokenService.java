@@ -1,13 +1,10 @@
 package com.cassiomolin.listify.auth.service;
 
 import com.cassiomolin.listify.auth.AuthenticationTokenDetails;
-import com.cassiomolin.listify.auth.Authority;
-import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 @Service

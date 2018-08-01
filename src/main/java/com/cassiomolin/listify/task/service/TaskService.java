@@ -1,8 +1,8 @@
 package com.cassiomolin.listify.task.service;
 
-import com.cassiomolin.listify.task.repository.TaskRepository;
 import com.cassiomolin.listify.task.domain.Task;
 import com.cassiomolin.listify.task.domain.TaskFilter;
+import com.cassiomolin.listify.task.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;

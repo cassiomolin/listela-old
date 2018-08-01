@@ -1,7 +1,6 @@
 package com.cassiomolin.listify.auth.service;
 
 import com.cassiomolin.listify.auth.AuthenticatedUserDetails;
-import com.cassiomolin.listify.auth.Authority;
 import com.cassiomolin.listify.user.domain.User;
 import com.cassiomolin.listify.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +29,8 @@ public class DefaultUserDetailsService implements UserDetailsService {
         return new AuthenticatedUserDetails.Builder()
                 .withUsername(user.getEmail())
                 .withPassword(user.getPassword())
-                .withAuthorities(mapToGrantedAuthorities(Collections.emptySet())) // Not supporting roles
+                .withAuthorities(Collections.emptySet())
                 .withActive(user.isActive())
                 .build();
-    }
-
-    private Set<GrantedAuthority> mapToGrantedAuthorities(Set<Authority> authorities) {
-        return authorities.stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.toString()))
-                .collect(Collectors.toSet());
     }
 }
