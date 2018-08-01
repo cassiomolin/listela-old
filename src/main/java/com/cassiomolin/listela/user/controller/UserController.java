@@ -35,6 +35,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Create a user.
+     *
+     * @param createUserDetails
+     * @return
+     */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> createUser(@Valid @NotNull @RequestBody CreateUserDetails createUserDetails) {
 
@@ -45,7 +51,12 @@ public class UserController {
         return ResponseEntity.created(location).build();
     }
 
-
+    /**
+     * Get a representation of the current authenticated user.
+     *
+     * @param principal
+     * @return
+     */
     @GetMapping(path = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<QueryUserDetails> getUser(Principal principal) {
 
@@ -53,6 +64,13 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toQueryUserDetails(user));
     }
 
+    /**
+     * Update details of the current authenticated user.
+     *
+     * @param updateUserDetails
+     * @param principal
+     * @return
+     */
     @PutMapping(path = "/me", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateUser(@Valid @NotNull @RequestBody UpdateUserDetails updateUserDetails,
                                            Principal principal) {
@@ -64,6 +82,13 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Update the password of the current authenticated user.
+     *
+     * @param updatePasswordDetails
+     * @param principal
+     * @return
+     */
     @PutMapping(path = "/me/password", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updatePassword(@Valid @NotNull @RequestBody UpdatePasswordDetails updatePasswordDetails,
                                                Principal principal) {
@@ -73,6 +98,12 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Get the picture of the current authenticated user.
+     *
+     * @param principal
+     * @return
+     */
     @GetMapping(path = "/me/picture", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> getPicture(Principal principal) {
 
@@ -84,6 +115,14 @@ public class UserController {
         }
     }
 
+    /**
+     * Update the picture of the current authenticated user.
+     *
+     * @param file
+     * @param principal
+     * @return
+     * @throws IOException
+     */
     @PutMapping(path = "/me/picture")
     public ResponseEntity<Void> updatePicture(@RequestParam("picture") MultipartFile file,
                                               Principal principal) throws IOException {
@@ -95,6 +134,12 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Remove the picture of the current authenticated user.
+     *
+     * @param principal
+     * @return
+     */
     @DeleteMapping(path = "/me/picture")
     public ResponseEntity<Void> removePicture(Principal principal) {
 
