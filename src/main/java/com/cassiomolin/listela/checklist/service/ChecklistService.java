@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,15 +22,20 @@ public class ChecklistService {
     private ChecklistRepository checklistRepository;
 
     public Checklist createChecklist(Checklist checklist) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found")); // Fix
-
-        checklist.setOwner(user);
         return checklistRepository.insert(checklist);
     }
 
     public Optional<Checklist> findById(String id) {
+        // FIXME validate user
         return checklistRepository.findById(id);
+    }
+
+    public List<Checklist> findAllByUser(User user) {
+        return checklistRepository.findAllByOwner(user);
+    }
+
+    public void delete(String id) {
+        // FIXME validate user
+        checklistRepository.deleteById(id);
     }
 }

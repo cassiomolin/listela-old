@@ -6,6 +6,8 @@ import com.cassiomolin.listela.checklist.domain.Checklist;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 /**
  * Component that maps a {@link Checklist} domain model to API models and vice versa.
  *
@@ -17,4 +19,6 @@ public interface ChecklistMapper {
     Checklist toChecklist(CreateChecklistDetails createChecklistDetails);
 
     QueryChecklistDetails toQueryChecklistDetails(Checklist checklist);
+
+    List<QueryChecklistDetails> toQueryChecklistDetails(List<Checklist> checklist);
 }
