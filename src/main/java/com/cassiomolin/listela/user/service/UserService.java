@@ -36,10 +36,16 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updatePassword(User user, String newPassword) {
-        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+    public User updatePassword(User user, String currentPassword, String newPassword) {
+
+        if (!currentPassword.equals(newPassword)) {
             throw new RuntimeException("Passwords don't match"); // FIXME
         }
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new RuntimeException("Current password doesn't match"); // FIXME
+        }
+
         user.setPassword(passwordEncoder.encode(newPassword));
         return userRepository.save(user);
     }

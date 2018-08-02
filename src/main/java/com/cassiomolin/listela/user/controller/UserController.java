@@ -94,7 +94,7 @@ public class UserController {
                                                Principal principal) {
 
         User user = findUser(principal);
-        userService.updatePassword(user, updatePasswordDetails.getPassword());
+        userService.updatePassword(user, updatePasswordDetails.getCurrentPassword(), updatePasswordDetails.getNewPassword());
         return ResponseEntity.noContent().build();
     }
 

@@ -14,6 +14,11 @@ public class UpdatePasswordDetails {
     @NotNull
     @NotBlank
     @Size(min = 8)
-    private String password;
+    private String currentPassword;
+
+    @NotNull
+    @NotBlank
+    @Size(min = 8)
+    private String newPassword;
 
 }
