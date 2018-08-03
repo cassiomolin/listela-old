@@ -1,10 +1,13 @@
 package com.cassiomolin.listela.common.config;
 
 
+import com.mongodb.MongoClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 
 import java.time.OffsetDateTime;
@@ -16,6 +19,19 @@ import java.util.List;
 @Configuration
 @EnableMongoAuditing(dateTimeProviderRef = "dateTimeProvider")
 public class MongoConfiguration {
+
+    @Autowired
+    private MongoProperties mongoProperties;
+
+    @Bean
+    public MongoClient mongoClient() {
+        return new MongoClient(mongoProperties.getHost(), mongoProperties.getPort());
+    }
+
+    @Bean
+    public MongoTemplate mongoTemplate() {
+        return new MongoTemplate(mongoClient(), mongoProperties.getDatabase());
+    }
 
     @Bean
     public MongoCustomConversions customConversions() {

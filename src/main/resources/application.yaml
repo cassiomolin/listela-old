@@ -8,3 +8,10 @@ auth:
     audience:  http://example.org
     clockSkew: 10    # seconds
     validFor:  86400 # seconds
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: test
