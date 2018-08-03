@@ -3,6 +3,7 @@ package com.cassiomolin.listela.user.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 
 import java.time.OffsetDateTime;
@@ -31,6 +32,7 @@ public class User {
 
     private PasswordResetToken passwordResetToken;
 
+    @CreatedDate
     private OffsetDateTime createdDate;
 
     @Data

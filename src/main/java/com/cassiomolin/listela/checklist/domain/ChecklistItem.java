@@ -2,8 +2,10 @@ package com.cassiomolin.listela.checklist.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 @Data
@@ -17,5 +19,6 @@ public class ChecklistItem {
 
     private Boolean completed;
 
-    private ZonedDateTime createdDate;
+    @CreatedDate
+    private OffsetDateTime createdDate;
 }
