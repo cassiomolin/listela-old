@@ -1,7 +1,7 @@
 package com.cassiomolin.listela.auth.service;
 
-import com.cassiomolin.listela.user.domain.User;
 import com.cassiomolin.listela.auth.AuthenticatedUserDetails;
+import com.cassiomolin.listela.user.domain.User;
 import com.cassiomolin.listela.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

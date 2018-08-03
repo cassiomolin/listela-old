@@ -1,12 +1,9 @@
 package com.cassiomolin.listela.checklist.service;
 
 import com.cassiomolin.listela.checklist.domain.Checklist;
-import com.cassiomolin.listela.user.domain.User;
-import com.cassiomolin.listela.user.repository.UserRepository;
 import com.cassiomolin.listela.checklist.repository.ChecklistRepository;
+import com.cassiomolin.listela.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
