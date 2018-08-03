@@ -37,6 +37,12 @@ public class ChecklistController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Create a checklist.
+     *
+     * @param createChecklistDetails
+     * @return
+     */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> createChecklist(@Valid @NotNull @RequestBody CreateChecklistDetails createChecklistDetails) {
 
@@ -51,6 +57,11 @@ public class ChecklistController {
         return ResponseEntity.created(location).build();
     }
 
+    /**
+     * Get a representation of a checklist.
+     *
+     * @return
+     */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<QueryChecklistDetails>> getChecklists() {
 
@@ -60,6 +71,11 @@ public class ChecklistController {
         return ResponseEntity.ok(checklistMapper.toQueryChecklistDetails(checklists));
     }
 
+    /**
+     * Get a representation of all checklists of a user.
+     * @param checklistId
+     * @return
+     */
     @GetMapping(path = "/{checklistId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<QueryChecklistDetails> getChecklist(@PathVariable String checklistId) {
 
@@ -67,6 +83,12 @@ public class ChecklistController {
         return ResponseEntity.ok(checklistMapper.toQueryChecklistDetails(checklist));
     }
 
+    /**
+     * Delete a checklist.
+     *
+     * @param checklistId
+     * @return
+     */
     @DeleteMapping(path = "/{checklistId}")
     public ResponseEntity<Void> deleteChecklist(@PathVariable String checklistId) {
 
@@ -76,6 +98,13 @@ public class ChecklistController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Update details of a checklist.
+     *
+     * @param checklistId
+     * @param updateChecklistDetails
+     * @return
+     */
     @PutMapping(path = "/{checklistId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateChecklist(@PathVariable String checklistId,
                                                 @Valid @NotNull @RequestBody UpdateChecklistDetails updateChecklistDetails) {
