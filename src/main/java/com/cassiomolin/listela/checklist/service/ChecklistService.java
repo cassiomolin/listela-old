@@ -35,7 +35,10 @@ public class ChecklistService {
     }
 
     public void delete(String id) {
-        // FIXME validate user
         checklistRepository.deleteById(id);
+    }
+
+    public Checklist updateChecklist(Checklist checklist) {
+        return checklistRepository.save(checklist);
     }
 }

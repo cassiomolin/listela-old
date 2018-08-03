@@ -16,31 +16,15 @@ public class ChecklistItemService {
     @Autowired
     private ChecklistItemRepository checklistItemRepository;
 
-    /**
-     * Create a checklistItem.
-     *
-     * @param checklistItem
-     * @return
-     */
     public ChecklistItem createTask(@NotNull ChecklistItem checklistItem) {
         checklistItem.setCompleted(false);
         return checklistItemRepository.save(checklistItem);
     }
 
-    /**
-     * Find all tasks.
-     *
-     * @return
-     */
     public List<ChecklistItem> findAllTasks() {
         return checklistItemRepository.findAll();
     }
 
-    /**
-     * Find tasks using a filter.
-     *
-     * @return
-     */
     public List<ChecklistItem> findTasks() {
 
 //        ChecklistItem task = new ChecklistItem();
@@ -56,12 +40,6 @@ public class ChecklistItemService {
         return checklistItemRepository.findAll();
     }
 
-    /**
-     * Delete tasks.
-     *
-     * @param completed
-     * @return
-     */
     public void deleteTasks(Boolean completed) {
 
         if (completed == null) {
@@ -74,30 +52,14 @@ public class ChecklistItemService {
         }
     }
 
-    /**
-     * Find a task by id.
-     *
-     * @param taskId
-     * @return
-     */
     public Optional<ChecklistItem> findTask(@NotNull String taskId) {
         return checklistItemRepository.findById(taskId);
     }
 
-    /**
-     * Update a checklistItem.
-     *
-     * @param checklistItem
-     */
     public void updateTask(@NotNull ChecklistItem checklistItem) {
         checklistItemRepository.save(checklistItem);
     }
 
-    /**
-     * Delete a task.
-     *
-     * @param taskId
-     */
     public void deleteTask(@NotNull String taskId) {
         checklistItemRepository.deleteById(taskId);
     }

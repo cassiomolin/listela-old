@@ -15,6 +15,5 @@ public class UpdateChecklistDetails {
     private String name;
 
     @NotNull
-    @NotBlank
     private Boolean completed;
 }
