@@ -20,7 +20,7 @@ public class DefaultUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userService.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(String.format("No user found with username '%s'.", username)));
+        User user = userService.findUserByEmail(username).orElseThrow(() -> new UsernameNotFoundException(String.format("No user found with username '%s'.", username)));
 
         return new AuthenticatedUserDetails.Builder()
                 .withId(user.getId())

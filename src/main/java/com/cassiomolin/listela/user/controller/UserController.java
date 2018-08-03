@@ -1,5 +1,6 @@
 package com.cassiomolin.listela.user.controller;
 
+import com.cassiomolin.listela.auth.AuthenticatedUserDetails;
 import com.cassiomolin.listela.user.controller.mapper.UserMapper;
 import com.cassiomolin.listela.user.controller.model.CreateUserDetails;
 import com.cassiomolin.listela.user.controller.model.QueryUserDetails;
@@ -11,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,7 +22,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.net.URI;
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/users")
@@ -54,13 +52,13 @@ public class UserController {
     /**
      * Get a representation of the current authenticated user.
      *
-     * @param principal
+     * @param authenticatedUserDetails
      * @return
      */
     @GetMapping(path = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<QueryUserDetails> getUser(Principal principal) {
+    public ResponseEntity<QueryUserDetails> getUser(@AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
 
-        User user = findUser(principal);
+        User user = findUser(authenticatedUserDetails.getId() );
         return ResponseEntity.ok(userMapper.toQueryUserDetails(user));
     }
 
@@ -68,14 +66,14 @@ public class UserController {
      * Update details of the current authenticated user.
      *
      * @param updateUserDetails
-     * @param principal
+     * @param authenticatedUserDetails
      * @return
      */
     @PutMapping(path = "/me", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateUser(@Valid @NotNull @RequestBody UpdateUserDetails updateUserDetails,
-                                           Principal principal) {
+                                           @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
 
-        User user = findUser(principal);
+        User user = findUser(authenticatedUserDetails.getId());
         userMapper.updateUser(updateUserDetails, user);
         userService.updateUser(user);
 
@@ -86,14 +84,14 @@ public class UserController {
      * Update the password of the current authenticated user.
      *
      * @param updatePasswordDetails
-     * @param principal
+     * @param authenticatedUserDetails
      * @return
      */
     @PutMapping(path = "/me/password", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updatePassword(@Valid @NotNull @RequestBody UpdatePasswordDetails updatePasswordDetails,
-                                               Principal principal) {
+                                               @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
 
-        User user = findUser(principal);
+        User user = findUser(authenticatedUserDetails.getId());
         userService.updatePassword(user, updatePasswordDetails.getCurrentPassword(), updatePasswordDetails.getNewPassword());
         return ResponseEntity.noContent().build();
     }
@@ -101,13 +99,13 @@ public class UserController {
     /**
      * Get the picture of the current authenticated user.
      *
-     * @param principal
+     * @param authenticatedUserDetails
      * @return
      */
     @GetMapping(path = "/me/picture", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<byte[]> getPicture(Principal principal) {
+    public ResponseEntity<byte[]> getPicture(@AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
 
-        User user = findUser(principal);
+        User user = findUser(authenticatedUserDetails.getId());
         if (user.getPicture() == null) {
             return ResponseEntity.notFound().build();
         } else {
@@ -119,15 +117,15 @@ public class UserController {
      * Update the picture of the current authenticated user.
      *
      * @param file
-     * @param principal
+     * @param authenticatedUserDetails
      * @return
      * @throws IOException
      */
     @PutMapping(path = "/me/picture")
     public ResponseEntity<Void> updatePicture(@RequestParam("picture") MultipartFile file,
-                                              Principal principal) throws IOException {
+                                              @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) throws IOException {
 
-        User user = findUser(principal);
+        User user = findUser(authenticatedUserDetails.getId());
         user.setPicture(file.getBytes());
         userService.updateUser(user);
 
@@ -137,21 +135,21 @@ public class UserController {
     /**
      * Remove the picture of the current authenticated user.
      *
-     * @param principal
+     * @param authenticatedUserDetails
      * @return
      */
     @DeleteMapping(path = "/me/picture")
-    public ResponseEntity<Void> removePicture(Principal principal) {
+    public ResponseEntity<Void> removePicture(@AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
 
-        User user = findUser(principal);
+        User user = findUser(authenticatedUserDetails.getId());
         user.setPicture(null);
         userService.updateUser(user);
 
         return ResponseEntity.noContent().build();
     }
 
-    private User findUser(Principal principal) {
-        return userService.findByEmail(principal.getName())
+    private User findUser(String userId) {
+        return userService.findUser(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 }

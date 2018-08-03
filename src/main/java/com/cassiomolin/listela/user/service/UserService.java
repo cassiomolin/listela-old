@@ -24,11 +24,11 @@ public class UserService {
         return userRepository.insert(user);
     }
 
-    public Optional<User> findById(String id) {
+    public Optional<User> findUser(String id) {
         return userRepository.findById(id);
     }
 
-    public Optional<User> findByEmail(String email) {
+    public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
