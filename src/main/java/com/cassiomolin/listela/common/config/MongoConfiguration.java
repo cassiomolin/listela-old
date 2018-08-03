@@ -29,7 +29,7 @@ public class MongoConfiguration {
 
         @Override
         public OffsetDateTime convert(Date source) {
-            return source == null ? null : OffsetDateTime.ofInstant(source.toInstant(), ZoneId.systemDefault());
+            return OffsetDateTime.ofInstant(source.toInstant(), ZoneId.systemDefault());
         }
     }
 
@@ -37,7 +37,7 @@ public class MongoConfiguration {
 
         @Override
         public Date convert(OffsetDateTime source) {
-            return source == null ? null : Date.from(source.toInstant());
+            return Date.from(source.toInstant());
         }
     }
 }
