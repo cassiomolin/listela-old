@@ -20,7 +20,7 @@ public class UserService {
     public User createUser(User user) {
 
         findUserByEmail(user.getEmail()).ifPresent(u -> {
-            throw new RuntimeException("User already exists with this email");
+            throw new RuntimeException("User already exists with this email: " + u.getEmail()); // FIXME
         });
 
         user.setActive(true);
