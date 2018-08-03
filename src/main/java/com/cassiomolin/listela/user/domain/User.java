@@ -2,12 +2,15 @@ package com.cassiomolin.listela.user.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 
 import java.time.OffsetDateTime;
 
 @Data
 @NoArgsConstructor
+@Accessors(chain = true)
 public class User {
 
     @Id

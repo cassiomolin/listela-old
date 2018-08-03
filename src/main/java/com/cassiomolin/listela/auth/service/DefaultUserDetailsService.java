@@ -23,6 +23,7 @@ public class DefaultUserDetailsService implements UserDetailsService {
         User user = userService.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(String.format("No user found with username '%s'.", username)));
 
         return new AuthenticatedUserDetails.Builder()
+                .withId(user.getId())
                 .withUsername(user.getEmail())
                 .withPassword(user.getPassword())
                 .withAuthorities(Collections.emptySet())

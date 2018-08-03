@@ -18,7 +18,7 @@ public class Checklist {
 
     private String name;
 
-    @DBRef
+    @DBRef(lazy = true)
     private User owner;
 
     private List<ChecklistItem> items;

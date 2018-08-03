@@ -10,16 +10,22 @@ import java.util.Set;
 
 public final class AuthenticatedUserDetails implements UserDetails, CredentialsContainer {
 
+    private final String id;
     private final String username;
     private String password;
     private final Set<GrantedAuthority> authorities;
     private final boolean active;
 
-    private AuthenticatedUserDetails(String username, String password, Set<GrantedAuthority> authorities, boolean active) {
+    private AuthenticatedUserDetails(String id, String username, String password, Set<GrantedAuthority> authorities, boolean active) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.authorities = Collections.unmodifiableSet(authorities);
         this.active = active;
+    }
+
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -69,10 +75,16 @@ public final class AuthenticatedUserDetails implements UserDetails, CredentialsC
      */
     public static class Builder {
 
+        private String id;
         private String username;
         private String password;
         private Set<GrantedAuthority> authorities;
         private boolean active;
+
+        public Builder withId(String id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder withUsername(String username) {
             this.username = username;
@@ -95,7 +107,7 @@ public final class AuthenticatedUserDetails implements UserDetails, CredentialsC
         }
 
         public AuthenticatedUserDetails build() {
-            return new AuthenticatedUserDetails(username, password, authorities, active);
+            return new AuthenticatedUserDetails(id, username, password, authorities, active);
         }
     }
 }

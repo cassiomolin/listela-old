@@ -25,16 +25,15 @@ public class ChecklistService {
         return checklistRepository.insert(checklist);
     }
 
-    public Optional<Checklist> findById(String id) {
-        // FIXME validate user
-        return checklistRepository.findById(id);
+    public Optional<Checklist> findChecklist(String checklistId, String userId) {
+        return checklistRepository.findByIdAndOwnerId(checklistId, userId);
     }
 
-    public List<Checklist> findAllByUser(User user) {
-        return checklistRepository.findAllByOwner(user);
+    public List<Checklist> findChecklists(String userId) {
+        return checklistRepository.findAllByOwnerId(userId);
     }
 
-    public void delete(String id) {
+    public void deleteChecklist(String id) {
         checklistRepository.deleteById(id);
     }
 
