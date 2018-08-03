@@ -5,12 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
-import org.springframework.data.mongodb.core.convert.CustomConversions;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,23 +20,23 @@ public class MongoConfiguration {
     @Bean
     public MongoCustomConversions customConversions() {
         List<Converter<?, ?>> converters = new ArrayList<>();
-        converters.add(new DateToZonedDateTimeConverter());
-        converters.add(new ZonedDateTimeToDateConverter());
+        converters.add(new DateToOffsetDateTimeConverter());
+        converters.add(new OffsetDateTimeToDateConverter());
         return new MongoCustomConversions(converters);
     }
 
-    class DateToZonedDateTimeConverter implements Converter<Date, ZonedDateTime> {
+    class DateToOffsetDateTimeConverter implements Converter<Date, OffsetDateTime> {
 
         @Override
-        public ZonedDateTime convert(Date source) {
-            return source == null ? null : ZonedDateTime.ofInstant(source.toInstant(), ZoneId.systemDefault());
+        public OffsetDateTime convert(Date source) {
+            return source == null ? null : OffsetDateTime.ofInstant(source.toInstant(), ZoneId.systemDefault());
         }
     }
 
-    class ZonedDateTimeToDateConverter implements Converter<ZonedDateTime, Date> {
+    class OffsetDateTimeToDateConverter implements Converter<OffsetDateTime, Date> {
 
         @Override
-        public Date convert(ZonedDateTime source) {
+        public Date convert(OffsetDateTime source) {
             return source == null ? null : Date.from(source.toInstant());
         }
     }
