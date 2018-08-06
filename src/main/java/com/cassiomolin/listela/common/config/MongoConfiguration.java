@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
@@ -18,19 +19,20 @@ import java.util.List;
 
 @Configuration
 @EnableMongoAuditing(dateTimeProviderRef = "dateTimeProvider")
-public class MongoConfiguration {
+public class MongoConfiguration extends AbstractMongoConfiguration {
 
     @Autowired
     private MongoProperties mongoProperties;
 
     @Bean
+    @Override
     public MongoClient mongoClient() {
         return new MongoClient(mongoProperties.getHost(), mongoProperties.getPort());
     }
 
-    @Bean
-    public MongoTemplate mongoTemplate() {
-        return new MongoTemplate(mongoClient(), mongoProperties.getDatabase());
+    @Override
+    protected String getDatabaseName() {
+        return mongoProperties.getDatabase();
     }
 
     @Bean

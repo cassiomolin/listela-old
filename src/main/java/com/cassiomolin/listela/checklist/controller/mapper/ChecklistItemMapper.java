@@ -20,9 +20,9 @@ public interface ChecklistItemMapper {
 
     ChecklistItem toChecklistItem(CreateChecklistItemDetails createChecklistItemDetails);
 
-    QueryChecklistItemDetails toQueryTaskResult(ChecklistItem checklistItem);
+    QueryChecklistItemDetails toQueryChecklistItemDetails(ChecklistItem checklistItem);
 
-    List<QueryChecklistItemDetails> toQueryTaskResults(List<ChecklistItem> checklistItems);
+    List<QueryChecklistItemDetails> toQueryChecklistItemDetails(List<ChecklistItem> checklistItems);
 
     void updateTask(UpdateChecklistItemDetails updateChecklistItemDetails, @MappingTarget ChecklistItem checklistItem);
 }

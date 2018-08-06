@@ -11,9 +11,7 @@ import java.util.Optional;
 @Repository
 public interface ChecklistRepository extends MongoRepository<Checklist, String> {
 
-    Optional<Checklist> findByIdAndOwnerId(String id, String ownerId);
+    Optional<Checklist> findByIdAndOwnerId(String checklistId, String userId);
 
-    List<Checklist> findAllByOwner(User owner);
-
-    List<Checklist> findAllByOwnerId(String ownerId);
+    List<Checklist> findAllByOwnerId(String userId);
 }

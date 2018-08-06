@@ -3,6 +3,7 @@ package com.cassiomolin.listela.checklist.controller.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 @Data
@@ -11,9 +12,9 @@ public class QueryChecklistItemDetails {
 
     private String id;
 
-    private String description;
+    private String title;
 
     private Boolean completed;
 
-    private ZonedDateTime createdDate;
+    private OffsetDateTime createdDate;
 }

@@ -12,5 +12,5 @@ public class CreateChecklistItemDetails {
 
     @NotNull
     @NotBlank
-    private String description;
+    private String title;
 }
