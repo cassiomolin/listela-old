@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 public class UpdateChecklistItemDetails {
 
     @NotBlank
-    private String description;
+    private String title;
 
     @NotNull
     private Boolean completed;

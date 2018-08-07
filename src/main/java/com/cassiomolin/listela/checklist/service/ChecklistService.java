@@ -46,7 +46,7 @@ public class ChecklistService {
         return checklistRepository.save(checklist);
     }
 
-    public ChecklistItem addItemToChecklist(String checklistId, String userId, ChecklistItem checklistItem) {
+    public ChecklistItem addItem(String checklistId, String userId, ChecklistItem checklistItem) {
 
         Optional<Checklist> optional = findChecklist(checklistId, userId);
         if (optional.isPresent()) {
@@ -65,7 +65,7 @@ public class ChecklistService {
         return null; // fixme
     }
 
-    public void deleteItemFromChecklist(String checklistId, String userId, String itemId) {
+    public void deleteItem(String checklistId, String userId, String itemId) {
 
         Optional<Checklist> optional = findChecklist(checklistId, userId);
         if (optional.isPresent()) {
@@ -78,5 +78,9 @@ public class ChecklistService {
 
             checklistRepository.save(checklist);
         }
+    }
+
+    public void updateItem(ChecklistItem item) {
+        checklistItemRepository.save(item);
     }
 }

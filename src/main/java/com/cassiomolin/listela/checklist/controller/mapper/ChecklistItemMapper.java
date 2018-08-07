@@ -24,5 +24,5 @@ public interface ChecklistItemMapper {
 
     List<QueryChecklistItemDetails> toQueryChecklistItemDetails(List<ChecklistItem> checklistItems);
 
-    void updateTask(UpdateChecklistItemDetails updateChecklistItemDetails, @MappingTarget ChecklistItem checklistItem);
+    void updateItem(UpdateChecklistItemDetails updateChecklistItemDetails, @MappingTarget ChecklistItem checklistItem);
 }
