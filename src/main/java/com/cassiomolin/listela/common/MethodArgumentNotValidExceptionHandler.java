@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,7 @@ public class MethodArgumentNotValidExceptionHandler {
         errorDetails.setStatus(UNPROCESSABLE_ENTITY.value());
         errorDetails.setTitle(UNPROCESSABLE_ENTITY.getReasonPhrase());
         errorDetails.setMessage("Request cannot be processed due to validation errors");
-        errorDetails.setPath(null); // FIXME
+        errorDetails.setPath(ServletUriComponentsBuilder.fromCurrentRequest().build().getPath());
         errorDetails.setValidationErrors(validationErrors);
 
         return ResponseEntity.unprocessableEntity().body(errorDetails);
