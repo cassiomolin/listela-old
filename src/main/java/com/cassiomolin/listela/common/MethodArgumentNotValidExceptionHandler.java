@@ -23,9 +23,6 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 @Order(HIGHEST_PRECEDENCE)
 public class MethodArgumentNotValidExceptionHandler {
 
-    @Autowired
-    private ObjectMapper mapper;
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<? extends ApiErrorDetails> handleException(MethodArgumentNotValidException exception) {
 
@@ -38,14 +35,11 @@ public class MethodArgumentNotValidExceptionHandler {
 
     private ResponseEntity<? extends ApiErrorDetails> handleUnprocessableEntity(MethodArgumentNotValidException exception) {
 
-        JavaType type = mapper.getTypeFactory().constructType(exception.getParameter().getParameterType());
-        List<BeanPropertyDefinition> properties = mapper.getSerializationConfig().introspect(type).findProperties();
-
         List<ValidationError> validationErrors = exception
                 .getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(fieldError -> toValidationError(fieldError, properties))
+                .map(this::toValidationError)
                 .collect(Collectors.toList());
 
         ApiValidationErrorDetails errorDetails = new ApiValidationErrorDetails();
@@ -58,20 +52,13 @@ public class MethodArgumentNotValidExceptionHandler {
         return ResponseEntity.unprocessableEntity().body(errorDetails);
     }
 
-    private ValidationError toValidationError(FieldError fieldError, List<BeanPropertyDefinition> properties) {
+    private ValidationError toValidationError(FieldError fieldError) {
 
         ValidationError validationError = new ValidationError();
         validationError.setMessage(fieldError.getDefaultMessage());
         validationError.setValue(fieldError.getRejectedValue());
-        validationError.setPath(getJsonPropertyName(fieldError, properties).orElse(fieldError.getField()));
+        validationError.setPath(fieldError.getField());
 
         return validationError;
-    }
-
-    private Optional<String> getJsonPropertyName(FieldError fieldError, List<BeanPropertyDefinition> properties) {
-        return properties.stream()
-                    .filter(property -> property.getField().getName().equals(fieldError.getField()))
-                    .map(BeanPropertyDefinition::getName)
-                    .findFirst();
     }
 }
