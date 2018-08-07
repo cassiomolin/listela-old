@@ -31,11 +31,9 @@ public class MethodArgumentNotValidExceptionHandler {
 
         if (exception.getParameter().hasParameterAnnotation(RequestBody.class)) {
             return handleUnprocessableEntity(exception);
-        } else {
-            // Set status to 400
         }
 
-        return ResponseEntity.unprocessableEntity().build();
+        return ResponseEntity.badRequest().build();
     }
 
     private ResponseEntity<? extends ApiErrorDetails> handleUnprocessableEntity(MethodArgumentNotValidException exception) {
