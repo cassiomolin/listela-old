@@ -3,16 +3,20 @@ package com.cassiomolin.listela.checklist.domain;
 import com.cassiomolin.listela.user.domain.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
+@Document
 @NoArgsConstructor
+@Accessors(chain = true)
 public class Checklist {
 
     @Id

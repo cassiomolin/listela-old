@@ -5,10 +5,12 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.OffsetDateTime;
 
 @Data
+@Document
 @NoArgsConstructor
 @Accessors(chain = true)
 public class User {
