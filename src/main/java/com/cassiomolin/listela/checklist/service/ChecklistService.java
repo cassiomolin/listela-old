@@ -1,11 +1,14 @@
 package com.cassiomolin.listela.checklist.service;
 
+import com.cassiomolin.listela.auth.AuthenticatedUserDetails;
 import com.cassiomolin.listela.checklist.domain.Checklist;
 import com.cassiomolin.listela.checklist.domain.ChecklistItem;
 import com.cassiomolin.listela.checklist.repository.ChecklistItemRepository;
 import com.cassiomolin.listela.checklist.repository.ChecklistRepository;
+import com.cassiomolin.listela.user.domain.User;
 import com.cassiomolin.listela.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,61 +27,100 @@ public class ChecklistService {
     @Autowired
     private ChecklistItemRepository checklistItemRepository;
 
+    /**
+     * Create a checklist.
+     *
+     * @param checklist
+     * @return
+     */
     public Checklist createChecklist(Checklist checklist) {
+        User user = userRepository.findById(getAuthenticatedUser().getId()).get();
+        checklist.setOwner(user);
         return checklistRepository.insert(checklist);
     }
 
-    public Optional<Checklist> findChecklist(String checklistId, String userId) {
-        return checklistRepository.findByIdAndOwnerId(checklistId, userId);
+    /**
+     * Find a checklist by id.
+     *
+     * @param checklistId
+     * @return
+     */
+    public Optional<Checklist> findChecklist(String checklistId) {
+        return checklistRepository.findByIdAndOwnerId(checklistId, getAuthenticatedUser().getId());
     }
 
-    public List<Checklist> findChecklists(String userId) {
-        return checklistRepository.findAllByOwnerId(userId);
+    /**
+     * Find checklists.
+     *
+     * @return
+     */
+    public List<Checklist> findChecklists() {
+        return checklistRepository.findAllByOwnerId(getAuthenticatedUser().getId());
     }
 
-    public void deleteChecklist(String id) {
-        checklistRepository.deleteById(id);
+    /**
+     * Delete a checklist by id.
+     *
+     * @param checklist
+     */
+    public void deleteChecklist(Checklist checklist) {
+        checklistRepository.delete(checklist);
     }
 
+    /**
+     * Update a checklist.
+     *
+     * @param checklist
+     * @return
+     */
     public Checklist updateChecklist(Checklist checklist) {
         return checklistRepository.save(checklist);
     }
 
-    public ChecklistItem addItem(String checklistId, String userId, ChecklistItem checklistItem) {
+    /**
+     * Add item to a checklist.
+     *
+     * @param checklist
+     * @param checklistItem
+     * @return
+     */
+    public ChecklistItem addItem(Checklist checklist, ChecklistItem checklistItem) {
 
-        Optional<Checklist> optional = findChecklist(checklistId, userId);
-        if (optional.isPresent()) {
+        checklistItem.setCompleted(false);
+        checklistItem = checklistItemRepository.save(checklistItem);
 
-            checklistItem.setCompleted(false);
-            checklistItem = checklistItemRepository.save(checklistItem);
+        List<ChecklistItem> items = Optional.ofNullable(checklist.getItems()).orElse(new ArrayList<>());
+        items.add(checklistItem);
+        checklist.setItems(items);
 
-            Checklist checklist = optional.get();
-            List<ChecklistItem> items = Optional.ofNullable(checklist.getItems()).orElse(new ArrayList<>());
-            items.add(checklistItem);
-            checklist.setItems(items);
-
-            checklistRepository.save(checklist);
-        }
-
-        return null; // fixme
+        checklistRepository.save(checklist);
+        return checklistItem;
     }
 
-    public void deleteItem(String checklistId, String userId, String itemId) {
+    /**
+     * Delete item from a checklist.
+     *
+     * @param checklist
+     * @param checklistItem
+     */
+    public void deleteItem(Checklist checklist, ChecklistItem checklistItem) {
 
-        Optional<Checklist> optional = findChecklist(checklistId, userId);
-        if (optional.isPresent()) {
+        checklistItemRepository.delete(checklistItem);
 
-            checklistItemRepository.deleteById(itemId);
-
-            Checklist checklist = optional.get();
-            Optional.ofNullable(checklist.getItems())
-                    .ifPresent(items -> items.removeIf(item -> item.getId().equals(itemId)));
-
-            checklistRepository.save(checklist);
-        }
+        Optional.ofNullable(checklist.getItems()).ifPresent(items -> items.removeIf(item -> checklistItem.getId().equals(item.getId())));
+        checklistRepository.save(checklist);
     }
 
+    /**
+     * Update an item from a checklist.
+     *
+     * @param item
+     */
     public void updateItem(ChecklistItem item) {
         checklistItemRepository.save(item);
+    }
+
+    private AuthenticatedUserDetails getAuthenticatedUser() {
+        return (AuthenticatedUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

@@ -44,11 +44,9 @@ public class ChecklistController {
      * @return
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> createChecklist(@Valid @NotNull @RequestBody CreateChecklistDetails createChecklistDetails,
-                                                @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
+    public ResponseEntity<Void> createChecklist(@Valid @NotNull @RequestBody CreateChecklistDetails createChecklistDetails) {
 
         Checklist checklist = checklistMapper.toChecklist(createChecklistDetails);
-        checklist.setOwner(new User().setId(authenticatedUserDetails.getId()));
         checklist = checklistService.createChecklist(checklist);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(checklist.getId()).toUri();
@@ -56,27 +54,27 @@ public class ChecklistController {
     }
 
     /**
-     * Get a representation of a checklist.
+     * Get a representation of all checklists.
      *
      * @return
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<QueryChecklistDetails>> getChecklists(@AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
+    public ResponseEntity<List<QueryChecklistDetails>> getChecklists() {
 
-        List<Checklist> checklists = checklistService.findChecklists(authenticatedUserDetails.getId());
+        List<Checklist> checklists = checklistService.findChecklists();
         return ResponseEntity.ok(checklistMapper.toQueryChecklistDetails(checklists));
     }
 
     /**
-     * Get a representation of all checklists of a user.
+     * Get a representation of a checklist.
+     *
      * @param checklistId
      * @return
      */
     @GetMapping(path = "/{checklistId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<QueryChecklistDetails> getChecklist(@PathVariable String checklistId,
-                                                              @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
+    public ResponseEntity<QueryChecklistDetails> getChecklist(@PathVariable String checklistId) {
 
-        Checklist checklist = findChecklist(checklistId, authenticatedUserDetails.getId());
+        Checklist checklist = findChecklist(checklistId);
         return ResponseEntity.ok(checklistMapper.toQueryChecklistDetails(checklist));
     }
 
@@ -87,11 +85,9 @@ public class ChecklistController {
      * @return
      */
     @DeleteMapping(path = "/{checklistId}")
-    public ResponseEntity<Void> deleteChecklist(@PathVariable String checklistId,
-                                                @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
+    public ResponseEntity<Void> deleteChecklist(@PathVariable String checklistId) {
 
-        Checklist checklist = findChecklist(checklistId, authenticatedUserDetails.getId());
-        checklistService.deleteChecklist(checklist.getId());
+        checklistService.deleteChecklist(findChecklist(checklistId));
         return ResponseEntity.noContent().build();
     }
 
@@ -104,25 +100,15 @@ public class ChecklistController {
      */
     @PutMapping(path = "/{checklistId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateChecklist(@PathVariable String checklistId,
-                                                @Valid @NotNull @RequestBody UpdateChecklistDetails updateChecklistDetails,
-                                                @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
+                                                @Valid @NotNull @RequestBody UpdateChecklistDetails updateChecklistDetails) {
 
-        Checklist checklist = findChecklist(checklistId, authenticatedUserDetails.getId());
+        Checklist checklist = findChecklist(checklistId);
         checklistMapper.updateChecklist(updateChecklistDetails, checklist);
         checklistService.updateChecklist(checklist);
         return ResponseEntity.noContent().build();
     }
 
-
-    private Checklist findChecklist(String checklistId, String userId) {
-
-        Checklist checklist = checklistService.findChecklist(checklistId, userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (!checklist.getOwner().getEmail().equals(username)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-
-        return checklist;
+    private Checklist findChecklist(String checklistId) {
+        return checklistService.findChecklist(checklistId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 }

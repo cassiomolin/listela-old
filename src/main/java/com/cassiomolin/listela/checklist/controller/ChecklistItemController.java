@@ -32,67 +32,99 @@ public class ChecklistItemController {
     @Autowired
     private ChecklistItemMapper checklistItemMapper;
 
+    /**
+     * Add item to a checklist.
+     *
+     * @param checklistId
+     * @param createChecklistItemDetails
+     * @return
+     */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> createItem(@PathVariable String checklistId,
-                                           @Valid @NotNull @RequestBody CreateChecklistItemDetails createChecklistItemDetails,
-                                           @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
+    public ResponseEntity<Void> addItem(@PathVariable String checklistId,
+                                        @RequestBody @Valid @NotNull CreateChecklistItemDetails createChecklistItemDetails) {
 
+        Checklist checklist = findChecklist(checklistId);
         ChecklistItem checklistItem = checklistItemMapper.toChecklistItem(createChecklistItemDetails);
-        checklistService.addItem(checklistId, authenticatedUserDetails.getId(), checklistItem);
+        checklistService.addItem(checklist, checklistItem);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(checklistItem.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 
+    /**
+     * Get items from a checklist.
+     *
+     * @param checklistId
+     * @return
+     */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<QueryChecklistItemDetails>> getItems(@PathVariable String checklistId,
-                                                                    @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
+    public ResponseEntity<List<QueryChecklistItemDetails>> getItems(@PathVariable String checklistId) {
 
-        Checklist checklist = findChecklist(checklistId, authenticatedUserDetails.getId());
+        Checklist checklist = findChecklist(checklistId);
         return ResponseEntity.ok(checklistItemMapper.toQueryChecklistItemDetails(checklist.getItems()));
     }
 
-
+    /**
+     * Get item from a checklist.
+     *
+     * @param checklistId
+     * @param itemId
+     * @return
+     */
     @GetMapping(path = "/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<QueryChecklistItemDetails> getItem(@PathVariable String checklistId,
-                                                             @PathVariable String itemId,
-                                                             @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
+                                                             @PathVariable String itemId) {
 
-        ChecklistItem checklistItem = findChecklistItem(checklistId, authenticatedUserDetails.getId(), itemId);
+        Checklist checklist = findChecklist(checklistId);
+        ChecklistItem checklistItem = findChecklistItem(checklist, itemId);
         return ResponseEntity.ok(checklistItemMapper.toQueryChecklistItemDetails(checklistItem));
     }
 
+    /**
+     * Delete item from a checklist.
+     *
+     * @param checklistId
+     * @param itemId
+     * @return
+     */
     @DeleteMapping(path = "/{itemId}")
     public ResponseEntity<QueryChecklistItemDetails> deleteItem(@PathVariable String checklistId,
-                                                                @PathVariable String itemId,
-                                                                @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
+                                                                @PathVariable String itemId) {
 
-        checklistService.deleteItem(checklistId, authenticatedUserDetails.getId(), itemId);
+        Checklist checklist = findChecklist(checklistId);
+        ChecklistItem checklistItem = findChecklistItem(checklist, itemId);
+        checklistService.deleteItem(checklist, checklistItem);
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Update an item from a checklist.
+     *
+     * @param checklistId
+     * @param itemId
+     * @param updateChecklistItemDetails
+     *
+     * @return
+     */
     @PutMapping(path = "/{itemId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateItem(@PathVariable String checklistId,
                                            @PathVariable String itemId,
-                                           @RequestBody @Valid @NotNull UpdateChecklistItemDetails updateChecklistItemDetails,
-                                           @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
+                                           @RequestBody @Valid @NotNull UpdateChecklistItemDetails updateChecklistItemDetails) {
 
-        ChecklistItem checklistItem = findChecklistItem(checklistId, authenticatedUserDetails.getId(), itemId);
+        Checklist checklist = findChecklist(checklistId);
+        ChecklistItem checklistItem = findChecklistItem(checklist, itemId);
         checklistItemMapper.updateItem(updateChecklistItemDetails, checklistItem);
         checklistService.updateItem(checklistItem);
 
         return ResponseEntity.noContent().build();
     }
 
-    private Checklist findChecklist(String checklistId, String userId) {
-        return checklistService.findChecklist(checklistId, userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
+    private Checklist findChecklist(String checklistId) {
+        return checklistService.findChecklist(checklistId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    private ChecklistItem findChecklistItem(String checklistId, String userId, String itemId) {
-        return findChecklist(checklistId, userId)
-                .getItems()
+    private ChecklistItem findChecklistItem(Checklist checklist, String itemId) {
+        return checklist.getItems()
                 .stream()
                 .filter(item -> item.getId().equals(itemId))
                 .findFirst()
