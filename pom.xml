@@ -10,8 +10,10 @@
 
     <properties>
 
+        <!-- Source encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <!-- Dependency versions -->
         <mapstruct.version>1.2.0.Final</mapstruct.version>
         <jjwt.version>0.9.1</jjwt.version>
         <lombok.version>1.18.2</lombok.version>
