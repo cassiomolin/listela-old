@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
 
 @Data
 @NoArgsConstructor

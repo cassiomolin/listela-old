@@ -1,6 +1,5 @@
 package com.cassiomolin.listela.checklist.controller.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
