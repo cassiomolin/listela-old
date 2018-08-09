@@ -1,13 +1,12 @@
 package com.cassiomolin.listela.user;
 
-import com.cassiomolin.listela.AbstractTest;
+import com.cassiomolin.listela.AbstractIntegrationTest;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.restassured.http.ContentType;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,19 +24,19 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public class UserTest extends AbstractTest {
+public class UserIntegrationTest extends AbstractIntegrationTest {
 
     @LocalServerPort
     private int port;
 
     @Value("${auth.jwt.secret}")
-    private String key;
+    private String jwtKey;
 
     @Value("${auth.jwt.issuer}")
-    private String issuer;
+    private String jwtIssuer;
 
     @Value("${auth.jwt.audience}")
-    private String audience;
+    private String jwtAudience;
 
     @Before
     public void before() {
@@ -123,8 +122,8 @@ public class UserTest extends AbstractTest {
 
     private Jws<Claims> parseToken(String token) {
         return Jwts.parser()
-                .setSigningKey(key)
-                .requireAudience(audience)
+                .setSigningKey(jwtKey)
+                .requireAudience(jwtAudience)
                 .parseClaimsJws(token);
     }
 }
