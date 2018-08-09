@@ -21,7 +21,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-
+@SuppressWarnings("Duplicates")
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class UserIntegrationTest extends AbstractIntegrationTest {
@@ -125,5 +125,25 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
                 .setSigningKey(jwtKey)
                 .requireAudience(jwtAudience)
                 .parseClaimsJws(token);
+    }
+
+    @Test
+    public void shouldNotAllowTwoUsersWithSameEmail() {
+
+        var userDetails = new HashMap<String, String>();
+        userDetails.put("firstName", "Jane");
+        userDetails.put("lastName", "Doe");
+        userDetails.put("email", "jane.doe@mail.com");
+        userDetails.put("password", "password");
+        registerUser(userDetails);
+
+         given()
+                .port(port)
+                .contentType(ContentType.JSON)
+                .body(userDetails)
+        .when()
+                .post("/users")
+        .then()
+                .statusCode(409);
     }
 }

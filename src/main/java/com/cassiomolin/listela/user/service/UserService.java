@@ -1,6 +1,7 @@
 package com.cassiomolin.listela.user.service;
 
 import com.cassiomolin.listela.user.domain.User;
+import com.cassiomolin.listela.user.exception.EmailAlreadyRegisteredException;
 import com.cassiomolin.listela.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,7 +21,7 @@ public class UserService {
     public User createUser(User user) {
 
         findUserByEmail(user.getEmail()).ifPresent(u -> {
-            throw new RuntimeException("User already exists with this email: " + u.getEmail()); // FIXME
+            throw new EmailAlreadyRegisteredException(); // FIXME
         });
 
         user.setActive(true);
