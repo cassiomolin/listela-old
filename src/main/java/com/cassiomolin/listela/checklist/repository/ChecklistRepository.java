@@ -13,6 +13,4 @@ public interface ChecklistRepository extends MongoRepository<Checklist, String> 
     Optional<Checklist> findByIdAndOwnerId(String checklistId, String userId);
 
     List<Checklist> findAllByOwnerId(String userId);
-
-    Optional<Checklist> deleteByIdAndOwnerId(String checklistId, String userId);
 }

@@ -26,7 +26,7 @@ public class Checklist {
     @DBRef(lazy = true)
     private User owner;
 
-    @DBRef
+    @DBRef(lazy = true)
     private List<ChecklistItem> items;
 
     @CreatedDate

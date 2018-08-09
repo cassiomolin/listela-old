@@ -87,6 +87,7 @@ public class ChecklistService {
     public ChecklistItem addItem(Checklist checklist, ChecklistItem checklistItem) {
 
         checklistItem.setCompleted(false);
+        checklistItem.setChecklist(checklist);
         checklistItem = checklistItemRepository.save(checklistItem);
 
         List<ChecklistItem> items = Optional.ofNullable(checklist.getItems()).orElse(new ArrayList<>());
@@ -95,6 +96,17 @@ public class ChecklistService {
 
         checklistRepository.save(checklist);
         return checklistItem;
+    }
+
+    /**
+     * Find item from a checklist.
+     *
+     * @param checklistId
+     * @param itemId
+     * @return
+     */
+    public Optional<ChecklistItem> findItem(String checklistId, String itemId) {
+        return checklistItemRepository.findByIdAndChecklistId(itemId, checklistId);
     }
 
     /**

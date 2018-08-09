@@ -61,6 +61,7 @@ public class ChecklistItemController {
     public ResponseEntity<List<QueryChecklistItemDetails>> getItems(@PathVariable String checklistId) {
 
         Checklist checklist = findChecklist(checklistId);
+
         return ResponseEntity.ok(checklistItemMapper.toQueryChecklistItemDetails(checklist.getItems()));
     }
 
@@ -77,6 +78,7 @@ public class ChecklistItemController {
 
         Checklist checklist = findChecklist(checklistId);
         ChecklistItem checklistItem = findChecklistItem(checklist, itemId);
+
         return ResponseEntity.ok(checklistItemMapper.toQueryChecklistItemDetails(checklistItem));
     }
 
@@ -94,6 +96,7 @@ public class ChecklistItemController {
         Checklist checklist = findChecklist(checklistId);
         ChecklistItem checklistItem = findChecklistItem(checklist, itemId);
         checklistService.deleteItem(checklist, checklistItem);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -120,14 +123,12 @@ public class ChecklistItemController {
     }
 
     private Checklist findChecklist(String checklistId) {
-        return checklistService.findChecklist(checklistId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return checklistService.findChecklist(checklistId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     private ChecklistItem findChecklistItem(Checklist checklist, String itemId) {
-        return checklist.getItems()
-                .stream()
-                .filter(item -> item.getId().equals(itemId))
-                .findFirst()
+        return checklistService.findItem(checklist.getId(), itemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 }
