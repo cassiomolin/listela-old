@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -51,6 +52,10 @@ public class UserTest extends AbstractTest {
         userDetails.put("lastName", "Doe");
         userDetails.put("email", "jane.doe@mail.com");
         userDetails.put("password", "password");
+        registerUser(userDetails);
+    }
+
+    private void registerUser(Map<String, String> userDetails) {
 
         given()
                 .port(port)
@@ -67,30 +72,18 @@ public class UserTest extends AbstractTest {
     @Test
     public void shouldRegisterUserAndAuthenticate() {
 
-        shouldRegisterUser();
+        var userDetails = new HashMap<String, String>();
+        userDetails.put("firstName", "Jane");
+        userDetails.put("lastName", "Doe");
+        userDetails.put("email", "jane.doe@mail.com");
+        userDetails.put("password", "password");
+        registerUser(userDetails);
 
-        var authDetails = new HashMap<String, String>();
-        authDetails.put("email", "jane.doe@mail.com");
-        authDetails.put("password", "password");
-
-        String token =
-        given()
-                .port(port)
-                .accept(ContentType.JSON)
-                .contentType(ContentType.JSON)
-                .body(authDetails)
-        .when()
-                .post("/auth")
-        .then()
-                .statusCode(200)
-                .contentType(ContentType.JSON)
-                .body("token", is(not(nullValue())))
-                .extract().path("token");
-
-        Claims claims = parseToken(token).getBody();
-        assertNotNull(claims.getExpiration());
-        assertEquals(audience, claims.getAudience());
-        assertEquals(authDetails.get("email"), claims.getSubject());
+        var credentials = new HashMap<String, String>();
+        credentials.put("email", "jane.doe@mail.com");
+        credentials.put("password", "password");
+        String token = authenticate(credentials);
+        parseToken(token);
 
         given()
                 .port(port)
@@ -102,10 +95,30 @@ public class UserTest extends AbstractTest {
                 .statusCode(200)
                 .contentType(ContentType.JSON)
                 .body("id", not(isEmptyOrNullString()))
-                .body("firstName", equalTo("Jane"))
-                .body("lastName", equalTo("Doe"))
-                .body("email1", equalTo(authDetails.get("email")))
+                .body("firstName", equalTo(userDetails.get("firstName")))
+                .body("lastName", equalTo(userDetails.get("lastName")))
+                .body("email", equalTo(userDetails.get("email")))
                 .body("password", isEmptyOrNullString());
+    }
+
+    private String authenticate(Map<String, String> credentials) {
+
+        String token =
+        given()
+                .port(port)
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .body(credentials)
+        .when()
+                .post("/auth")
+        .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("token", is(not(nullValue())))
+        .extract()
+                .path("token");
+
+        return token;
     }
 
     private Jws<Claims> parseToken(String token) {
