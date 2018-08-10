@@ -1,7 +1,5 @@
 package com.cassiomolin.listela;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.bson.Document;
