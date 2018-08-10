@@ -8,12 +8,16 @@ import io.restassured.http.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.junit.Assert.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,7 +86,13 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
         credentials.put("email", "jane.doe@mail.com");
         credentials.put("password", "password");
         String token = authenticate(credentials);
-        parseToken(token);
+
+        Claims claims = parseToken(token).getBody();
+        assertEquals(userDetails.get("email"), claims.getSubject());
+        assertEquals(jwtIssuer, claims.getIssuer());
+        assertEquals(jwtAudience, claims.getAudience());
+        assertTrue(OffsetDateTime.now().isBefore(
+                OffsetDateTime.ofInstant(claims.getExpiration().toInstant(), ZoneId.systemDefault())));
 
         given()
                 .port(port)
@@ -121,10 +131,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     private Jws<Claims> parseToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtKey)
-                .requireAudience(jwtAudience)
-                .parseClaimsJws(token);
+        return Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(token);
     }
 
     @Test
