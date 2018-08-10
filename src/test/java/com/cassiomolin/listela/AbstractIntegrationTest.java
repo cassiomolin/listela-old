@@ -62,16 +62,22 @@ public abstract class AbstractIntegrationTest {
                 .compact();
     }
 
-    protected void createTestUser() {
+    protected void createDefaultUser() {
+
         Document document = new Document();
         document.put("_id", ObjectId.get());
-        document.put("firstName", "Jane");
-        document.put("lastName", "Doe");
-        document.put("email", "jane.doe@mail.com");
+        document.put("firstName", "SpongeBob");
+        document.put("lastName", "SquarePants");
+        document.put("email", "spongebobe@mail.com");
         document.put("password", "$2a$10$LhvW555n98L8qNIQ04208.8sNEV.IptTxkeub0pln04b6wo2JFTYa"); // 'password' hashed with bcrypt
         document.put("active", true);
         document.put("createdDate", new Date());
         document.put("_class", "com.cassiomolin.listela.user.domain.User");
+
         mongoTemplate.getCollection("user").insertOne(document);
+    }
+
+    protected String issueAuthenticationTokenForDefaultUser() {
+        return issueAuthenticationToken("spongebobe@mail.com");
     }
 }

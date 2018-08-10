@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,8 +41,9 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
         registerUser(userDetails);
     }
 
-    private void registerUser(Map<String, String> userDetails) {
+    private String registerUser(Map<String, String> userDetails) {
 
+        Response response =
         given()
                 .port(port)
                 .contentType(ContentType.JSON)
@@ -51,7 +53,12 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
         .then()
                 .statusCode(201)
                 .body(isEmptyString())
-                .header(HttpHeaders.LOCATION, is(not(nullValue())));
+                .header(HttpHeaders.LOCATION, is(not(nullValue())))
+        .extract()
+                .response();
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        return location.substring(location.lastIndexOf("/") + 1);
     }
 
     @Test
@@ -92,6 +99,24 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
                 .body("lastName", equalTo(userDetails.get("lastName")))
                 .body("email", equalTo(userDetails.get("email")))
                 .body("password", isEmptyOrNullString());
+    }
+
+    public Map<String, Object> getAuthenticatedUser(String authenticationToken) {
+
+        Response response =
+        given()
+                .port(port)
+                .accept(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + authenticationToken)
+        .when()
+                .get("/users/me")
+        .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+        .extract()
+                .response();
+
+        return response.body().jsonPath().getMap("");
     }
 
     private String authenticate(Map<String, String> credentials) {
