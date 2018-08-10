@@ -27,20 +27,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SuppressWarnings("Duplicates")
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = RANDOM_PORT)
 public class UserIntegrationTest extends AbstractIntegrationTest {
-
-    @LocalServerPort
-    private int port;
-
-    @Value("${auth.jwt.secret}")
-    private String jwtKey;
-
-    @Value("${auth.jwt.issuer}")
-    private String jwtIssuer;
-
-    @Value("${auth.jwt.audience}")
-    private String jwtAudience;
 
     @Before
     public void before() {
@@ -88,9 +75,11 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
         String token = authenticate(credentials);
 
         Claims claims = parseToken(token).getBody();
-        assertEquals(userDetails.get("email"), claims.getSubject());
+        assertNotNull(claims.getId());
         assertEquals(jwtIssuer, claims.getIssuer());
         assertEquals(jwtAudience, claims.getAudience());
+        assertEquals(userDetails.get("email"), claims.getSubject());
+        assertNotNull(claims.getIssuedAt());
         assertTrue(OffsetDateTime.now().isBefore(
                 OffsetDateTime.ofInstant(claims.getExpiration().toInstant(), ZoneId.systemDefault())));
 
