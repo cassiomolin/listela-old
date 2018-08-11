@@ -69,14 +69,14 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
         userDetails.put("lastName", "Doe");
         userDetails.put("email", "jane.doe@mail.com");
         userDetails.put("password", "password");
-        registerUser(userDetails);
+        String id = registerUser(userDetails);
 
         var credentials = new HashMap<String, String>();
         credentials.put("email", "jane.doe@mail.com");
         credentials.put("password", "password");
-        String token = authenticate(credentials);
+        String authenticationToken = authenticate(credentials);
 
-        Claims claims = parseToken(token).getBody();
+        Claims claims = parseToken(authenticationToken).getBody();
         assertNotNull(claims.getId());
         assertEquals(jwtIssuer, claims.getIssuer());
         assertEquals(jwtAudience, claims.getAudience());
@@ -85,20 +85,12 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
         assertTrue(OffsetDateTime.now().isBefore(
                 OffsetDateTime.ofInstant(claims.getExpiration().toInstant(), ZoneId.systemDefault())));
 
-        given()
-                .port(port)
-                .accept(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-        .when()
-                .get("/users/me")
-        .then()
-                .statusCode(200)
-                .contentType(ContentType.JSON)
-                .body("id", not(isEmptyOrNullString()))
-                .body("firstName", equalTo(userDetails.get("firstName")))
-                .body("lastName", equalTo(userDetails.get("lastName")))
-                .body("email", equalTo(userDetails.get("email")))
-                .body("password", isEmptyOrNullString());
+        Map<String, Object> result = getAuthenticatedUser(authenticationToken);
+        assertEquals(id, result.get("id"));
+        assertEquals(userDetails.get("firstName"), result.get("firstName"));
+        assertEquals(userDetails.get("lastName"), result.get("lastName"));
+        assertEquals(userDetails.get("email"), result.get("email"));
+        assertNull(result.get("password"));
     }
 
     public Map<String, Object> getAuthenticatedUser(String authenticationToken) {
