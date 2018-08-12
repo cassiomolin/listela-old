@@ -73,7 +73,6 @@ public class ChecklistIntegrationTest extends AbstractIntegrationTest {
     private ResponseEntity<Object> deleteChecklist(String id, String authenticationToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.AUTHORIZATION, AUTHORIZATION_SCHEME + authenticationToken);
-        ResponseEntity<List<Foo>> foo = foo();
         return restTemplate.exchange("/checklists/{id}", HttpMethod.DELETE, new HttpEntity<>(headers), Object.class, id);
     }
 
