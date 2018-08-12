@@ -40,6 +40,8 @@ public abstract class AbstractIntegrationTest {
     @Value("${auth.jwt.audience}")
     protected String jwtAudience;
 
+    protected static final String AUTHORIZATION_SCHEME = "Bearer ";
+
     protected void cleanDatabase() {
         mongoTemplate.getDb().drop();
     }

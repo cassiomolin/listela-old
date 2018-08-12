@@ -4,24 +4,19 @@ import com.cassiomolin.listela.AbstractIntegrationTest;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.restassured.http.ContentType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.Map;
 
-import static io.restassured.RestAssured.given;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -40,16 +35,20 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
                 .setLastName("Doe")
                 .setEmail("jane.doe@mail.com")
                 .setPassword("password");
+
         ResponseEntity<Void> registerUserResponse = registerUser(createUserDetails);
         assertEquals(HttpStatus.CREATED, registerUserResponse.getStatusCode());
+
         URI location = registerUserResponse.getHeaders().getLocation();
         assertNotNull(location);
 
         Credentials credentials = new Credentials()
                 .setEmail("jane.doe@mail.com")
                 .setPassword("password");
+
         ResponseEntity<AuthenticationToken> authenticateResponse = authenticate(credentials);
         assertEquals(HttpStatus.OK, authenticateResponse.getStatusCode());
+
         AuthenticationToken authenticationToken = authenticateResponse.getBody();
         assertNotNull(authenticationToken);
 
@@ -63,6 +62,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 
         ResponseEntity<QueryUserDetails> getAuthenticatedUserResponse = getAuthenticatedUser(authenticationToken.getToken());
         assertEquals(HttpStatus.OK, getAuthenticatedUserResponse.getStatusCode());
+
         QueryUserDetails queryUserDetails = getAuthenticatedUserResponse.getBody();
         assertNotNull(queryUserDetails);
 
@@ -80,6 +80,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
                 .setLastName("Doe")
                 .setEmail("jane.doe@mail.com")
                 .setPassword("password");
+
         ResponseEntity<Void> registerUserResponse = registerUser(createUserDetails);
         assertEquals(HttpStatus.CREATED, registerUserResponse.getStatusCode());
 
@@ -96,10 +97,8 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     private ResponseEntity<QueryUserDetails> getAuthenticatedUser(String authenticationToken) {
-
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + authenticationToken);
-
         return restTemplate.exchange("/users/me", HttpMethod.GET, new HttpEntity<>(headers), QueryUserDetails.class);
     }
 
