@@ -2,7 +2,6 @@ package com.cassiomolin.listela.checklist;
 
 import com.cassiomolin.listela.AbstractIntegrationTest;
 import io.restassured.http.ContentType;
-import io.restassured.mapper.ObjectMapperType;
 import io.restassured.response.Response;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +15,6 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 @SuppressWarnings("Duplicates")
@@ -47,7 +45,7 @@ public class ChecklistIntegrationTest extends AbstractIntegrationTest {
 
         Response response =
         given()
-                .port(port)
+                .port(serverPort)
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + authenticationToken)
                 .body(checklistDetails)
@@ -68,7 +66,7 @@ public class ChecklistIntegrationTest extends AbstractIntegrationTest {
 
         Response response =
         given()
-                .port(port)
+                .port(serverPort)
                 .accept(ContentType.JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + authenticationToken)
         .when()

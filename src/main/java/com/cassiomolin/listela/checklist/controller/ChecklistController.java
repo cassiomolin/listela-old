@@ -32,9 +32,6 @@ public class ChecklistController {
     private ChecklistMapper checklistMapper;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private ChecklistService checklistService;
 
     /**

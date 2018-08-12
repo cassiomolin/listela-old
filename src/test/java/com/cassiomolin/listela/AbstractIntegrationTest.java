@@ -8,9 +8,11 @@ import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.UUID;
@@ -21,7 +23,13 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 public abstract class AbstractIntegrationTest {
 
     @LocalServerPort
-    protected int port;
+    protected int serverPort;
+
+    @Autowired
+    protected MongoTemplate mongoTemplate;
+
+    @Autowired
+    protected TestRestTemplate restTemplate;
 
     @Value("${auth.jwt.secret}")
     protected String jwtKey;
@@ -31,9 +39,6 @@ public abstract class AbstractIntegrationTest {
 
     @Value("${auth.jwt.audience}")
     protected String jwtAudience;
-
-    @Autowired
-    protected MongoTemplate mongoTemplate;
 
     protected void cleanDatabase() {
         mongoTemplate.getDb().drop();
@@ -79,5 +84,9 @@ public abstract class AbstractIntegrationTest {
 
     protected String issueAuthenticationTokenForDefaultUser() {
         return issueAuthenticationToken("spongebobe@mail.com");
+    }
+
+    protected String getIdFromUri(URI uri) {
+        return uri.getPath().substring(uri.getPath().lastIndexOf("/") + 1);
     }
 }
