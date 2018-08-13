@@ -1,5 +1,6 @@
 package com.cassiomolin.listela.user.controller;
 
+import com.cassiomolin.listela.Application;
 import com.cassiomolin.listela.user.controller.mapper.UserMapper;
 import com.cassiomolin.listela.user.domain.User;
 import com.cassiomolin.listela.user.service.UserService;
@@ -9,8 +10,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -20,16 +21,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.endsWith;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
-@Import({UserControllerTest.TestSecurityConfig.class, UserController.class})
+@Import({UserControllerTest.TestSecurityConfig.class, Application.class})
 public class UserControllerTest {
 
     @MockBean
@@ -45,13 +48,11 @@ public class UserControllerTest {
 
     @Before
     public void setup() {
-        this.mvc = MockMvcBuilders
-                .webAppContextSetup(context)
+        this.mvc = MockMvcBuilders.webAppContextSetup(context)
                 .apply(springSecurity())
                 .alwaysDo(print())
                 .build();
     }
-
 
     @Test
     public void shouldReturn201AndLocationHeader() throws Exception {
@@ -68,11 +69,11 @@ public class UserControllerTest {
 
         this.mvc.perform(post("/users").content(json)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(status().isCreated());
-                // TODO test Location header
+                .andExpect(status().isCreated())
+                .andExpect(header().exists(HttpHeaders.LOCATION))
+                .andExpect(header().string(HttpHeaders.LOCATION, endsWith("/foo")));
     }
 
-    @Configuration
     public static class TestSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
